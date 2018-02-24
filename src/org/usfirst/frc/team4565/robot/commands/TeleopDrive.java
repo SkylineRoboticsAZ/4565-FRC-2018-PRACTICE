@@ -1,7 +1,10 @@
 package org.usfirst.frc.team4565.robot.commands;
 
 import org.usfirst.frc.team4565.robot.Robot;
+import org.usfirst.frc.team4565.robot.RobotMap;
+import org.usfirst.frc.team4565.robot.subsystems.DriveTrain;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -11,13 +14,19 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class TeleopDrive extends Command {
 
+	private DriveTrain m_driveTrain;
+	private XboxController m_driveController;
+	
 	/**
 	 * Constructs a new TeleopDrive command
 	 */
-    public TeleopDrive() {
+    public TeleopDrive(DriveTrain driveTrain) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.kDriveTrain);
+    	m_driveTrain = driveTrain;
+    	m_driveController = Robot.kOi.getPrimaryController();
+    	
+    	requires(driveTrain);
     }
 
     /**
@@ -32,8 +41,51 @@ public class TeleopDrive extends Command {
      * the DriveTrain's driveWithXBoxController method
      */
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	Robot.kDriveTrain.driveWithXBoxController(Robot.kOi.getPrimaryController());
+    protected void execute() {    	    	
+        //Read values from controller
+        double accelerator = m_driveController.getRawAxis(3);
+        double decelerator = m_driveController.getRawAxis(2);
+        double turnFactor = m_driveController.getRawAxis(4) + m_driveController.getRawAxis(0);
+        
+        //Determine if the values are within margin of error
+        boolean useAccelerator, useDecelerator, useTurnFactor;
+        useAccelerator = checkDeadband(accelerator, RobotMap.driveDeadband);
+        useDecelerator = checkDeadband(decelerator, RobotMap.driveDeadband);
+        useTurnFactor = checkDeadband(turnFactor, RobotMap.driverTurnMultiplier);
+
+        //Zero values that are within margin of error &
+        // give backing up priority over going forward
+        double newMotorValue;
+
+        if (useDecelerator)
+            newMotorValue = -decelerator;
+        else if (useAccelerator)
+            newMotorValue = accelerator;
+        else
+            newMotorValue = 0;
+
+        if (!useTurnFactor)
+            turnFactor = 0;
+
+        //Y = A(1-|X|) if x < 1 (Y,A) if x > 0 (A,Y)
+        //Drive if we have any values that are actually reasonable
+        if (useAccelerator || useDecelerator || useTurnFactor) {
+            //Boost if the boost button is pressed
+            double boostMultiplier = (m_driveController.getRawButton(10) ?
+                    RobotMap.boostEnabledMultiplier : RobotMap.boostDisabledMultiplier);
+            newMotorValue *= boostMultiplier;
+
+            m_driveTrain.setLeftDrive(newMotorValue + turnFactor * RobotMap.driverTurnMultiplier);
+            m_driveTrain.setRightDrive(newMotorValue - turnFactor * RobotMap.driverTurnMultiplier);
+        } else {
+        	m_driveTrain.setLeftDrive(0);
+        	m_driveTrain.setRightDrive(0);
+        }
+    }
+    
+    private boolean checkDeadband(double value, double deadband) {
+    	//Check if the value is within the deadband
+        return (value > deadband || value < -deadband);
     }
 
     /**

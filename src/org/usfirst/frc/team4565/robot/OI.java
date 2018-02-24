@@ -33,8 +33,8 @@ public class OI {
 		m_primaryController = new XboxController(RobotMap.primaryJoystickPort);
 		m_secondaryController = new XboxController(RobotMap.secondaryJoystickPort);
 
-		m_bottomClaw = new TriggerTrigger(m_secondaryController, TriggerTrigger.Trigger.LeftTrigger);
-		m_topClaw = new TriggerTrigger(m_secondaryController, TriggerTrigger.Trigger.RightTrigger);
+		m_bottomClaw = new TriggerTrigger(m_secondaryController, TriggerTrigger.Trigger.RightTrigger);
+		m_topClaw = new TriggerTrigger(m_secondaryController, TriggerTrigger.Trigger.LeftTrigger);
 
 		m_winchButton = new JoystickButton(m_secondaryController, 1);
 		
@@ -42,7 +42,7 @@ public class OI {
 		m_topClaw.whenActive(new ToggleClaw(Robot.kTopClaw));
 		m_winchButton.whileHeld(new TeleopWinchControl(Robot.kWinch));
 	}
-
+	
 	public XboxController getPrimaryController() {
 		return m_primaryController;
 	}

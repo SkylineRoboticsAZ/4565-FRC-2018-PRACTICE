@@ -47,4 +47,6 @@ public class RobotMap {
     //Winch ports
     public static final int winchPort = 3,
     						winchArmPort = 4;
+    //Auto config
+    public static final double autoStraightSpeed = .5;
 }
