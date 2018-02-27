@@ -18,7 +18,6 @@ import org.usfirst.frc.team4565.robot.extensions.VictorSPWrapper;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.Encoder;
 //import edu.wpi.first.wpilibj.Compressor;
 
 /**

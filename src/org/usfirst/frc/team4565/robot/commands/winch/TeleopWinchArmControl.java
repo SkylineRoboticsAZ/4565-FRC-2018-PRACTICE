@@ -1,8 +1,10 @@
 package org.usfirst.frc.team4565.robot.commands.winch;
 
 import org.usfirst.frc.team4565.robot.Robot;
+import org.usfirst.frc.team4565.robot.RobotMap;
 import org.usfirst.frc.team4565.robot.subsystems.WinchArm;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TeleopWinchArmControl extends Command {
@@ -23,7 +25,16 @@ public class TeleopWinchArmControl extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	m_winchArm.teleopControlArmWithController(Robot.kOi.getSecondaryController());
+    	XboxController controller = Robot.kOi.getSecondaryController();
+		double value = controller.getPOV();
+
+		if (value == 0) {
+			m_winchArm.setWinchArmPower(RobotMap.winchArmPower);
+		} else if (value == 180) {
+			m_winchArm.setWinchArmPower(-RobotMap.winchArmPower);
+		} else {
+			m_winchArm.setWinchArmPower(0);
+		}
     }
 
     // Make this return true when this Command no longer needs to run execute()

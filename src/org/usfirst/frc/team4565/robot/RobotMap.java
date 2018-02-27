@@ -40,13 +40,12 @@ public class RobotMap {
 							topClawSolenoidPort1 = 1,
 							topClawPitchControlPort = 5;
 	//Winch variables
-    public static final double driverWinchDeadband = .1,
-    						   driverWinchMultiplier = .5,
-                               winchPower = .5,
-    						   winchArmPower = .3;
+    public static final double winchPower = 1,
+    						   winchArmPower = .75;
     //Winch ports
     public static final int winchPort = 3,
     						winchArmPort = 4;
     //Auto config
-    public static final double autoStraightSpeed = .5;
+    public static final double autoStraightSpeed = .5,
+    						   wheelDiameter = .1524;
 }

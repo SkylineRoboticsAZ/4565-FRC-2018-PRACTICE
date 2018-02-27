@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.buttons.*;
 public class OI {
 	
 	private XboxController m_primaryController, m_secondaryController;
-	private Button m_winchButton;
+	private Button m_winchButton, m_winchReverseButton;
 	private TriggerTrigger m_bottomClaw,
 				           m_topClaw;
 
@@ -37,10 +37,12 @@ public class OI {
 		m_topClaw = new TriggerTrigger(m_secondaryController, TriggerTrigger.Trigger.LeftTrigger);
 
 		m_winchButton = new JoystickButton(m_secondaryController, 1);
+		m_winchReverseButton = new JoystickButton(m_secondaryController, 4);
 		
 		m_bottomClaw.whenActive(new ToggleClaw(Robot.kBottomClaw));
 		m_topClaw.whenActive(new ToggleClaw(Robot.kTopClaw));
 		m_winchButton.whileHeld(new TeleopWinchControl(Robot.kWinch));
+		m_winchReverseButton.whileHeld(new TeleopWinchControl(Robot.kWinch, true));
 	}
 	
 	public XboxController getPrimaryController() {

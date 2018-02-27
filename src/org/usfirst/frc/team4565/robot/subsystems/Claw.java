@@ -1,12 +1,10 @@
 package org.usfirst.frc.team4565.robot.subsystems;
 
-import org.usfirst.frc.team4565.robot.RobotMap;
 import org.usfirst.frc.team4565.robot.commands.claw.TeleopClawPitchControl;
 import org.usfirst.frc.team4565.robot.extensions.MotorControllerInterface;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * Controls a claw consisting of a motor for pitch control
@@ -55,29 +53,16 @@ public class Claw extends Subsystem {
 	public boolean isClawOpen() {
 		return m_clawCylinder.get() == DoubleSolenoid.Value.kReverse;
 	}
-	
-	/**
-	 * Control the pitch of the claw using a Joystick object for input
-	 * @param controller The Joystick to use
-	 */
-	public void controlPitchWithController(XboxController controller) {		
-		double pitchValue = -controller.getRawAxis(m_controllerAxis);
-		
-		if (checkDeadband(pitchValue, RobotMap.driverClawDeadband))
-			m_pitchMotor.setPower(pitchValue);
-		else
-			m_pitchMotor.setPower(0);
+
+	public void setPitchMotorPower(double power) {
+		m_pitchMotor.setPower(power);
 	}
 
 	/**
 	 * Initialize the default command for the subsystem
 	 */
     public void initDefaultCommand() {
-    	setDefaultCommand(new TeleopClawPitchControl(this));
-    }
-    
-    private boolean checkDeadband(double value, double deadband) {
-        return (value > deadband || value < -deadband);
+    	setDefaultCommand(new TeleopClawPitchControl(this, m_controllerAxis));
     }
 }
 

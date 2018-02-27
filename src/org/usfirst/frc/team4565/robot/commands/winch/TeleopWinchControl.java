@@ -11,18 +11,24 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TeleopWinchControl extends Command {
 
     private Winch m_winch;
+    private boolean m_inverted;
 
-    public TeleopWinchControl(Winch winch) {
+    public TeleopWinchControl(Winch winch, boolean invert) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
         m_winch = winch;
+        m_inverted = invert;
 
         requires(winch);
     }
+    
+    public TeleopWinchControl(Winch winch) {
+    	this(winch, false);
+    }
 
-    // Called just before this Command runs the first time
+	// Called just before this Command runs the first time
     protected void initialize() {
-        m_winch.setWinchPower(RobotMap.winchPower);
+        m_winch.setWinchPower(m_inverted ? -RobotMap.winchPower : RobotMap.winchPower);
     }
 
     // Called repeatedly when this Command is scheduled to run
