@@ -26,7 +26,8 @@ public class OI {
 				           m_topClaw;
 
 	public OI() {
-
+		m_primaryController = null;
+		m_secondaryController = null;
 	}
 	
 	public void init() {

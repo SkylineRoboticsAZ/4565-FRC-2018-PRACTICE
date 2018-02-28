@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TeleopDrive extends Command {
 
 	private DriveTrain m_driveTrain;
-	private XboxController m_driveController;
 	
 	/**
 	 * Constructs a new TeleopDrive command
@@ -24,7 +23,6 @@ public class TeleopDrive extends Command {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	m_driveTrain = driveTrain;
-    	m_driveController = Robot.kOi.getPrimaryController();
     	
     	requires(driveTrain);
     }
@@ -41,11 +39,13 @@ public class TeleopDrive extends Command {
      * the DriveTrain's driveWithXBoxController method
      */
     // Called repeatedly when this Command is scheduled to run
-    protected void execute() {    	    	
+    protected void execute() {
+    	XboxController controller = Robot.kOi.getPrimaryController();
+    	
         //Read values from controller
-        double accelerator = m_driveController.getRawAxis(3);
-        double decelerator = m_driveController.getRawAxis(2);
-        double turnFactor = m_driveController.getRawAxis(4) + m_driveController.getRawAxis(0);
+        double accelerator = controller.getRawAxis(3);
+        double decelerator = controller.getRawAxis(2);
+        double turnFactor = controller.getRawAxis(4) + controller.getRawAxis(0);
         
         //Determine if the values are within margin of error
         boolean useAccelerator, useDecelerator, useTurnFactor;
@@ -71,7 +71,7 @@ public class TeleopDrive extends Command {
         //Drive if we have any values that are actually reasonable
         if (useAccelerator || useDecelerator || useTurnFactor) {
             //Boost if the boost button is pressed
-            double boostMultiplier = (m_driveController.getRawButton(10) ?
+            double boostMultiplier = (controller.getRawButton(10) ?
                     RobotMap.boostEnabledMultiplier : RobotMap.boostDisabledMultiplier);
             newMotorValue *= boostMultiplier;
 
