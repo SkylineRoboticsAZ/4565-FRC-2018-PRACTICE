@@ -41,7 +41,8 @@ public class RobotMap {
 							topClawPitchControlPort = 5;
 	//Winch variables
     public static final double winchPower = 1,
-    						   winchArmPower = .5;
+    						   winchArmMultiplier = .75,
+    						   winchArmDeadband = .2;
     //Winch ports
     public static final int winchPort = 3,
     						winchArmPort = 4;

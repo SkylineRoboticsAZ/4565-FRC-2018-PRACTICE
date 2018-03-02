@@ -29,7 +29,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
  */
 public class Robot extends TimedRobot {
 	public static DriveTrain kDriveTrain;
-	public static Claw kBottomClaw, kTopClaw;
+	public static Claw kBottomClaw;
 	public static Winch kWinch;
 	public static WinchArm kWinchArm;
 	public static OI kOi;
@@ -47,7 +47,6 @@ public class Robot extends TimedRobot {
 		//Initialize subsystems
 		initDriveTrain();
 		initBottomClaw();
-		initTopClaw();
 		initWinch();
 		initWinchArm();
 		kOi = new OI();
@@ -171,16 +170,6 @@ public class Robot extends TimedRobot {
 		
 		//Create the new Claw subsystem
 		kBottomClaw = new Claw(pitchMotor, clawCylinder, 1);
-	}
-	
-	private void initTopClaw() {
-		//Create all the motor controller objects
-		TalonSRXWrapper pitchMotor = new TalonSRXWrapper(RobotMap.topClawPitchControlPort);
-		DoubleSolenoid clawCylinder = new DoubleSolenoid(RobotMap.topClawSolenoidPort0, 
-														 RobotMap.topClawSolenoidPort1);
-		
-		//Create the new Claw subsystem
-		kTopClaw = new Claw(pitchMotor, clawCylinder, 5);
 	}
 
 	private void initWinch() {

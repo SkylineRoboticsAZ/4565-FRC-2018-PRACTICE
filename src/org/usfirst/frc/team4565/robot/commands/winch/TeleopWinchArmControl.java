@@ -26,12 +26,11 @@ public class TeleopWinchArmControl extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	XboxController controller = Robot.kOi.getSecondaryController();
-		double value = controller.getPOV();
-
-		if (value == 0) {
-			m_winchArm.setWinchArmPower(RobotMap.winchArmPower);
-		} else if (value == 180) {
-			m_winchArm.setWinchArmPower(-RobotMap.winchArmPower);
+		double value = controller.getRawAxis(5);
+		
+		if (checkDeadband(value, RobotMap.winchArmDeadband)) {
+			value *= RobotMap.winchArmMultiplier;
+			m_winchArm.setWinchArmPower(-value);
 		} else {
 			m_winchArm.setWinchArmPower(0);
 		}
@@ -49,5 +48,10 @@ public class TeleopWinchArmControl extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    }
+    
+    private boolean checkDeadband(double value, double deadband) {
+    	//Check if the value is within the deadband
+        return (value > deadband || value < -deadband);
     }
 }
