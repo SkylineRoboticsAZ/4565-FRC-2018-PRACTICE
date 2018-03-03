@@ -23,7 +23,11 @@ public class RobotMap {
 	public static final int leftFrontDriveMotor = 4,
 							leftBackDriveMotor = 3,
 							rightFrontDriveMotor = 1,
-							rightBackDriveMotor = 0;
+							rightBackDriveMotor = 0,
+							leftEncoderPort0 = 0,
+							leftEncoderPort1 = 1,
+							rightEncoderPort0 = 2,
+							rightEncoderPort1 = 3;
 	//Robot drive parameters
 	public static final double driveDeadband = .1,
 							   driverTurnDeadband = .2,
@@ -40,11 +44,15 @@ public class RobotMap {
 							topClawSolenoidPort1 = 1,
 							topClawPitchControlPort = 5;
 	//Winch variables
-    public static final double driverWinchDeadband = .1,
-    						   driverWinchMultiplier = .5,
-                               winchPower = .5,
-    						   winchArmPower = .3;
+    public static final double winchPower = 1,
+    						   winchArmMultiplier = .75,
+    						   winchArmDeadband = .2;
     //Winch ports
     public static final int winchPort = 3,
     						winchArmPort = 4;
+    //Auto config
+    public static final double autoStraightSpeed = .25,
+    						   autoTurnSpeed = .25,
+    						   wheelDiameter = .1524,
+    						   robotDiameter = .6096;
 }

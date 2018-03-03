@@ -1,8 +1,10 @@
 package org.usfirst.frc.team4565.robot.commands.claw;
 
 import org.usfirst.frc.team4565.robot.Robot;
+import org.usfirst.frc.team4565.robot.RobotMap;
 import org.usfirst.frc.team4565.robot.subsystems.Claw;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -13,13 +15,15 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TeleopClawPitchControl extends Command {
 
 	private Claw m_claw;
+	private int m_controllerAxis;
 	
 	/**
 	 * Construct a new TeleopClawPitchControl object
 	 * @param claw The Claw object that will be modified
 	 */
-    public TeleopClawPitchControl(Claw claw) {
+    public TeleopClawPitchControl(Claw claw, int controllerAxis) {
     	m_claw = claw;
+    	m_controllerAxis = controllerAxis;
     	
     	requires(claw);
     }
@@ -37,7 +41,13 @@ public class TeleopClawPitchControl extends Command {
      */
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-        m_claw.controlPitchWithController(Robot.kOi.getSecondaryController());
+        XboxController controller = Robot.kOi.getSecondaryController();
+		double pitchValue = -controller.getRawAxis(m_controllerAxis);
+		
+		if (checkDeadband(pitchValue, RobotMap.driverClawDeadband))
+			m_claw.setPitchMotorPower(pitchValue);
+		else
+			m_claw.setPitchMotorPower(0);
     }
 
     /**
@@ -62,5 +72,9 @@ public class TeleopClawPitchControl extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    }
+    
+    private boolean checkDeadband(double value, double deadband) {
+        return (value > deadband || value < -deadband);
     }
 }

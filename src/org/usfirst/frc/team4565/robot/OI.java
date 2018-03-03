@@ -21,28 +21,34 @@ import edu.wpi.first.wpilibj.buttons.*;
 public class OI {
 	
 	private XboxController m_primaryController, m_secondaryController;
-	private Button m_winchButton;
-	private TriggerTrigger m_bottomClaw,
-				           m_topClaw;
+	private Button m_winchButton, m_winchReverseButton;
+	private TriggerTrigger m_bottomClaw;
+	private boolean m_initialized = false;
 
 	public OI() {
-
+		m_primaryController = null;
+		m_secondaryController = null;
 	}
 	
 	public void init() {
+		if (m_initialized)
+			return;
+		
 		m_primaryController = new XboxController(RobotMap.primaryJoystickPort);
 		m_secondaryController = new XboxController(RobotMap.secondaryJoystickPort);
 
-		m_bottomClaw = new TriggerTrigger(m_secondaryController, TriggerTrigger.Trigger.LeftTrigger);
-		m_topClaw = new TriggerTrigger(m_secondaryController, TriggerTrigger.Trigger.RightTrigger);
+		m_bottomClaw = new TriggerTrigger(m_secondaryController, TriggerTrigger.Trigger.RightTrigger);
 
 		m_winchButton = new JoystickButton(m_secondaryController, 1);
+		m_winchReverseButton = new JoystickButton(m_secondaryController, 4);
 		
 		m_bottomClaw.whenActive(new ToggleClaw(Robot.kBottomClaw));
-		m_topClaw.whenActive(new ToggleClaw(Robot.kTopClaw));
 		m_winchButton.whileHeld(new TeleopWinchControl(Robot.kWinch));
+		m_winchReverseButton.whileHeld(new TeleopWinchControl(Robot.kWinch, true));
+		
+		m_initialized = true;
 	}
-
+	
 	public XboxController getPrimaryController() {
 		return m_primaryController;
 	}
