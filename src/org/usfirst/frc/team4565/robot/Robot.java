@@ -14,11 +14,18 @@ import org.usfirst.frc.team4565.robot.subsystems.WinchArm;
 import org.usfirst.frc.team4565.robot.extensions.TalonSRXWrapper;
 import org.usfirst.frc.team4565.robot.extensions.TalonWrapper;
 import org.usfirst.frc.team4565.robot.extensions.VictorSPWrapper;
+import org.usfirst.frc.team4565.robot.commands.DriveStraight;
+import org.usfirst.frc.team4565.robot.commands.TurnDegrees;
 
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 //import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,10 +40,11 @@ public class Robot extends TimedRobot {
 	public static Winch kWinch;
 	public static WinchArm kWinchArm;
 	public static OI kOi;
+	public static Command m_autoCommand;
 	
 	//private static Compressor m_compressor;
 
-	//SendableChooser<Command> m_chooser = new SendableChooser<>();
+	SendableChooser<Command> m_chooser = new SendableChooser<>();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -50,12 +58,12 @@ public class Robot extends TimedRobot {
 		initWinch();
 		initWinchArm();
 		kOi = new OI();
+		kOi.init();
 		
-		//m_compressor = new Compressor(0);
-		
-		/*m_chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		SmartDashboard.putData("Auto mode", m_chooser);*/
+		m_chooser.addDefault("No Auto", null);
+		m_chooser.addObject("Drive Straight", new DriveStraight(kDriveTrain, 1));
+		m_chooser.addObject("Turn 90 Degrees Right", new TurnDegrees(kDriveTrain, 90));
+		SmartDashboard.putData("Auto Selection", m_chooser);
 	}
 
 	/**
@@ -86,7 +94,10 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		//m_autonomousCommand = m_chooser.getSelected();
+		m_autoCommand = m_chooser.getSelected();
+		
+		if (m_autoCommand != null)
+			m_autoCommand.start();
 
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector",
@@ -98,7 +109,8 @@ public class Robot extends TimedRobot {
 		// schedule the autonomous command (example)
 		/*if (m_autonomousCommand != null) {
 			m_autonomousCommand.start();
-		}*/
+		}
+		m_autoCommand.start();*/
 	}
 
 	/**
@@ -115,10 +127,9 @@ public class Robot extends TimedRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		/*if (m_autonomousCommand != null) {
-			m_autonomousCommand.cancel();
-		}*/
-		kOi.init();
+		if (m_autoCommand != null) {
+			m_autoCommand.cancel();
+		}
 	}
 
 	/**
@@ -143,7 +154,7 @@ public class Robot extends TimedRobot {
 	public void testPeriodic() {
 	}
 	
-	private void initDriveTrain() {
+	private void initDriveTrain() {		
 		//Create all the motor controller objects
 		TalonSRXWrapper leftFrontMotor = new TalonSRXWrapper(RobotMap.leftFrontDriveMotor);
 		TalonSRXWrapper leftBackMotor = new TalonSRXWrapper(RobotMap.leftBackDriveMotor);
@@ -154,12 +165,18 @@ public class Robot extends TimedRobot {
 		rightFrontMotor.setInverted(true);
 		rightBackMotor.setInverted(true);
 		
+		//Create encoder objects
+		Encoder leftEncoder = new Encoder(RobotMap.leftEncoderPort0, RobotMap.leftEncoderPort1, true, EncodingType.k4X);
+		Encoder rightEncoder = new Encoder(RobotMap.rightEncoderPort0, RobotMap.rightEncoderPort1, false, EncodingType.k4X);
+		
 		//Create the DriveTrain subsystem
 		kDriveTrain = new DriveTrain();
 		kDriveTrain.addLeftSideMotor(leftFrontMotor);
 		kDriveTrain.addLeftSideMotor(leftBackMotor);
 		kDriveTrain.addRightSideMotor(rightFrontMotor);
 		kDriveTrain.addRightSideMotor(rightBackMotor);
+		kDriveTrain.setLeftSideEncoder(leftEncoder);
+		kDriveTrain.setRightSideEncoder(rightEncoder);
 	}
 	
 	private void initBottomClaw() {

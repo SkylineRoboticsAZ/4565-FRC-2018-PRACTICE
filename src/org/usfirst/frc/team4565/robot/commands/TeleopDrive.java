@@ -81,6 +81,9 @@ public class TeleopDrive extends Command {
         	m_driveTrain.setLeftDrive(0);
         	m_driveTrain.setRightDrive(0);
         }
+        
+    	System.out.println("Left Distance: " + m_driveTrain.getLeftEncoder().getDistance());
+    	System.out.println("Right Distance: " + m_driveTrain.getRightEncoder().getDistance());
     }
     
     private boolean checkDeadband(double value, double deadband) {

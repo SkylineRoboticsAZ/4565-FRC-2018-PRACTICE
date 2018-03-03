@@ -23,7 +23,11 @@ public class RobotMap {
 	public static final int leftFrontDriveMotor = 4,
 							leftBackDriveMotor = 3,
 							rightFrontDriveMotor = 1,
-							rightBackDriveMotor = 0;
+							rightBackDriveMotor = 0,
+							leftEncoderPort0 = 0,
+							leftEncoderPort1 = 1,
+							rightEncoderPort0 = 2,
+							rightEncoderPort1 = 3;
 	//Robot drive parameters
 	public static final double driveDeadband = .1,
 							   driverTurnDeadband = .2,
@@ -47,6 +51,8 @@ public class RobotMap {
     public static final int winchPort = 3,
     						winchArmPort = 4;
     //Auto config
-    public static final double autoStraightSpeed = .5,
-    						   wheelDiameter = .1524;
+    public static final double autoStraightSpeed = .25,
+    						   autoTurnSpeed = .25,
+    						   wheelDiameter = .1524,
+    						   robotDiameter = .6096;
 }
