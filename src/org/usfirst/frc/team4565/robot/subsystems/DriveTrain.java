@@ -47,12 +47,12 @@ public class DriveTrain extends Subsystem {
 	
 	public void setLeftSideEncoder(Encoder encoder) {
 		configureEncoder(encoder);
+		//encoder.setReverseDirection(true);
 		m_leftEncoder = encoder;
 	}
 	
 	public void setRightSideEncoder(Encoder encoder) {
 		configureEncoder(encoder);
-		encoder.setReverseDirection(true);
 		m_rightEncoder = encoder;
 	}
 	
