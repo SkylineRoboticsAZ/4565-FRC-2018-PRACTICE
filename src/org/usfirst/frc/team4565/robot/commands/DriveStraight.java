@@ -45,10 +45,10 @@ public class DriveStraight extends Command {
     		   rightMotorSpeed = RobotMap.autoStraightSpeed;
     	
     	if (leftValue > rightValue) {
-    		System.out.println("Correcting right");
+    		System.out.println("Correcting left");
     		leftMotorSpeed -= (leftValue - rightValue);
     	} else if (rightValue > leftValue) {
-    		System.out.println("Correcting left");
+    		System.out.println("Correcting right");
     		rightMotorSpeed -= (rightValue - leftValue);
     	}
     	
